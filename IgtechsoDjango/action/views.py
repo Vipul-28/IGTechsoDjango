@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from action.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,UserChangePasswordSerializer,UserSendRestLinkSerializer,UserResetPasswordSerializer
+from action.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,UserChangePasswordSerializer,UserSendRestLinkSerializer,UserResetPasswordSerializer,BooksAndBrochureSerializer,BlogSerializer
 from django.contrib.auth import authenticate
 from action.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+from action.models import BooksAndBrochure,Blog
+import json
 
 
 # Generate Token Manually
@@ -78,3 +80,27 @@ class UserResetPasswordView(APIView):
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         
+
+
+
+
+class BooksAndBrochureView(APIView):
+    renderer_classes=[UserRenderer]
+    def post(self, request, format=None):
+        data = json.loads(request.body)
+        value=data.get('type')
+        books = BooksAndBrochure.objects.filter(type=value)
+        serializer = BooksAndBrochureSerializer(books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+class BlogView(APIView):
+    renderer_classes=[UserRenderer]
+    def get(self, request, format=None):
+        blog = Blog.objects.all()
+        serializer = BlogSerializer(blog, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+       
+    

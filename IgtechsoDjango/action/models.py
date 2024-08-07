@@ -62,3 +62,48 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+class Blog(models.Model):
+    blog_title=models.CharField(max_length=1000)
+    blog_date=models.DateField()
+    blog_question=models.CharField(max_length=100)
+    blog_description=models.TextField(max_length=100)
+    blog_image=models.ImageField(default="", upload_to='blog/images')
+    is_admin = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.blog_title
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+    
+    def has_module_perms(self, app_label):
+        return True
+
+    @property
+    def is_staff(self):
+        return self.is_admin
+
+
+
+class BooksAndBrochure(models.Model):
+    SELECT_TYPE_CHOICES = [
+        ('BOOK', 'Books'),
+        ('BRO', 'Brochure')
+    ]
+    title=models.CharField(max_length=100)
+    author=models.CharField(max_length=100)
+    publisher=models.CharField(max_length=100)
+    description=models.TextField(max_length=100)
+    type=models.CharField(choices=SELECT_TYPE_CHOICES,max_length=10)
+    category=models.CharField(max_length=100)
+    image=models.ImageField(upload_to='books/image')
+    book = models.FileField(upload_to='books/pdf',default="")
+    YOP=models.PositiveIntegerField()
+    pages=models.PositiveIntegerField()
+    view=models.PositiveIntegerField()
+    read=models.PositiveIntegerField()
+
+
+    

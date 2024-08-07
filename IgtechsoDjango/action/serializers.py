@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from action.models import User
+from action.models import User,BooksAndBrochure,Blog
 from xml.dom import ValidationErr
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -91,3 +91,15 @@ class UserResetPasswordSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return attrs
+
+
+
+# Book Serializer
+class BooksAndBrochureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=BooksAndBrochure
+        fields=['id','title','author','publisher','description','type','category','image','book','YOP','pages','view','read']
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Blog
+        fields=['id','blog_title','blog_question','blog_description','blog_date','blog_image']
